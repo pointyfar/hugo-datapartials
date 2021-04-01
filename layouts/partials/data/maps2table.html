@@ -1,0 +1,36 @@
+{{ $data := .data }}
+{{ $keyorder := .keyorder }}
+{{ $keys := slice }}
+{{ $orderedkeys := slice }}
+
+{{ range $data }}
+  {{ range $k, $v := . }}
+  {{ if not (in $keys $k) }}
+    {{ $keys = $keys | append $k }}
+  {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if gt (len $keyorder) 0 }}
+{{ range $keyorder }}
+  {{ if in $keys . }}
+  {{ $orderedkeys = $orderedkeys | append . }}
+  {{ end }}
+{{ end }}
+{{ end }}
+
+{{ $keys = $orderedkeys }}
+
+{{ $rows := slice $keys }}
+{{ range $i, $e := $data }}
+  {{ $row := (slice) }}
+  {{ range $j, $key := $keys }}
+    {{ $val := index $e $key }}
+    {{ $row = $row | append (print $val) }}
+  {{ end }}
+  
+  {{ $rows = $rows | append (slice $row) }}
+  
+{{ end }}
+
+{{ partial "data/csv2table.html" (dict "csv" $rows "context" . "options" (dict "classes" (dict "table" "table table-striped table-bordered table-hover"))) }}

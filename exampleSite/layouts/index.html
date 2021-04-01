@@ -1,0 +1,36 @@
+{{ define "main" }}
+
+{{ $statcsv := readFile "static/static_data.csv" | transform.Unmarshal }}
+{{ $csv2maps := partial "data/csv2maps.html" (dict "csv" $statcsv "context" .) }}
+
+{{ $json := .Site.Data.mock_data }}
+{{ range $json }}
+{{.color}} 
+{{ end }}
+<hr>
+<hr>
+<hr>
+<hr>
+$maps2table:
+{{ $keyorder := slice "id" "sci_name" "color" "text" "missing"}}
+{{ partial "data/maps2table.html" (dict "data" $json "context" . "keyorder" $keyorder) }}
+<hr>
+<hr>
+<hr>
+
+{{ .Scratch.SetInMap "tableclasses" "table" "table table-striped table-bordered table-hover" }}
+{{ .Scratch.SetInMap "tableclasses" "td" "tdclass" }}
+{{ .Scratch.SetInMap "tableclasses" "th" "thclass" }}
+
+{{ .Scratch.SetInMap "tableheaders" "col" 1 }}
+{{ .Scratch.SetInMap "tableheaders" "row" 2 }}
+
+{{ $tableopts := .Scratch.SetInMap "tableopts" "classes" ($.Scratch.Get "tableclasses") }}
+{{ $tableopts := .Scratch.SetInMap "tableopts" "headers" ($.Scratch.Get "tableheaders") }}
+
+{{ $csv2table := partial "data/csv2table.html" (dict "csv" $statcsv "context" . "options" (.Scratch.Get "tableopts") ) }}
+$csv2table : {{$csv2table}}
+<hr>
+
+{{.Content}}
+{{ end }}

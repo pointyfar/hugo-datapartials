@@ -1,0 +1,16 @@
+{{ $csv := .csv }}
+{{ $keys := slice }}
+{{ $rows := slice }}
+
+{{ range first 1 $csv }}{{ $keys = . }}{{ end }}
+
+{{ range $i, $row := after 1 $csv }}
+  {{ $s := newScratch }}
+  {{ range $j, $cell := $row }}
+    {{ $s.SetInMap "tmp" (index $keys $j) $cell }}
+  {{ end }}
+  {{ $rows = $rows | append ($s.Get "tmp") }}
+{{ end }}
+
+{{ return $rows }}
+

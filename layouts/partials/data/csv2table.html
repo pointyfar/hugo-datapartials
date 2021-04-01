@@ -1,0 +1,34 @@
+{{- $csv := .csv -}}
+{{- $options := .options -}}
+{{- $classes := cond (isset $options "classes") (index $options "classes") dict -}}
+{{- $headers := cond (isset $options "headers") (index $options "headers") dict -}}
+{{- $colh := cond (isset $headers "col") (index $headers "col") 1 -}}
+{{- $rowh := cond (isset $headers "row") (index $headers "row") 0 -}}
+<table class="{{with $classes}}{{with .table}}{{.|safeHTMLAttr}}{{end}}{{end}}">
+  {{- range $i, $r := $csv -}}
+  
+  {{- if lt $i $colh -}}
+  {{- if eq $i 0 -}}<thead>{{- end -}}
+    <tr>
+      {{- range $j, $cell := $r -}}
+      <th scope="col" class="{{with $classes}}{{with .th}}{{.|safeHTMLAttr}}{{end}}{{end}}">{{$cell}}</th>
+      {{end}}
+    </tr>
+    </thead>
+  {{- else -}}
+    {{- if eq $i $colh -}}
+      <tbody>
+    {{end}}
+    <tr>
+      {{- range $j, $cell := $r -}}
+        {{- $tag := cond (lt $j $rowh) "th" "td" -}}
+        {{- $tdclass := "" -}}
+        {{- $tdattrs := cond (eq $tag "th") "scope=\"row\"" "" -}}
+        {{- with $classes -}}{{- with .td -}}{{- $tdclass = . -}}{{- end -}}{{- end -}}
+        {{- printf "<%s class=\"%s\" %s>%s</%s>" $tag $tdclass $tdattrs $cell $tag | safeHTML -}}
+      {{end}}
+    </tr>
+    {{- end -}}
+  {{- end -}}
+  </tbody>
+</table>
