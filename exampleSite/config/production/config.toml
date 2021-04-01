@@ -1,0 +1,6 @@
+baseURL = "https://modest-elion-674efc.netlify.app/"
+languageCode = "en-us"
+title = "My New Hugo Site"
+
+themesDir = "../.."
+theme = "repo"
