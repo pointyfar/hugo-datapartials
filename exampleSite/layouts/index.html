@@ -3,14 +3,12 @@
 {{ $statcsv := readFile "static/static_data.csv" | transform.Unmarshal }}
 {{ $csv2maps := partial "data/csv2maps.html" (dict "csv" $statcsv "context" .) }}
 
-{{ $json := .Site.Data.mock_data }}
-{{ range $json }}
-{{.color}} 
-{{ end }}
+{{ $json := site.Data.mock_data }}
 <hr>
 <hr>
 <hr>
 <hr>
+<a id="maps2table"></a>
 $maps2table:
 {{ $keyorder := slice "id" "sci_name" "color" "text" "missing"}}
 {{ partial "data/maps2table.html" (dict "data" $json "context" . "keyorder" $keyorder) }}
@@ -29,6 +27,7 @@ $maps2table:
 {{ $tableopts := .Scratch.SetInMap "tableopts" "headers" ($.Scratch.Get "tableheaders") }}
 
 {{ $csv2table := partial "data/csv2table.html" (dict "csv" $statcsv "context" . "options" (.Scratch.Get "tableopts") ) }}
+<a id="csv2table"></a>
 $csv2table : {{$csv2table}}
 <hr>
 
