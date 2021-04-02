@@ -1,7 +1,6 @@
 ---
 title: "Data Partials for Hugo"
 date: 2019-04-09T09:24:53+10:00
-draft: true
 ---
 
 Ingeniis nisi eu doctrina sempiternum. Ipsum id mandaremus o veniam 
